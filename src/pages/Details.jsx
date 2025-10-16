@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Details = () => {
-  const { type, id } = useParams(); // Ejemplo: /people/1 o /vehicles/2
+  const { type, id } = useParams(); 
   const [item, setItem] = useState(null);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Details = () => {
 
   const { properties } = item;
 
-  // URL de imagen del Visual Guide
+  // URL de imagen del Visual Guide(No me funcionaron las imagenes de naves y planetas)
   const imageUrl = `https://starwars-visualguide.com/assets/img/${type === "people" ? "characters" : type}/${id}.jpg`;
 
   return (

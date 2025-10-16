@@ -30,7 +30,7 @@ function reducer(state, action) {
 export const GlobalProvider = ({ children }) => {
   const [store, dispatch] = useReducer(reducer, initialState);
 
-  // Helpers/acciones para usar desde los componentes (evitan repetir shape)
+  // Helpers/acciones para usar desde los componentes
   const actions = {
     addFavorite: (fav) => dispatch({ type: "ADD_FAVORITE", payload: fav }),
     removeFavorite: (uid) => dispatch({ type: "REMOVE_FAVORITE", payload: uid }),
