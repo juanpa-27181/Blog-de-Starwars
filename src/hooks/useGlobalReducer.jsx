@@ -1,24 +1,47 @@
-// Import necessary hooks and functions from React.
-import { useContext, useReducer, createContext } from "react";
-import storeReducer, { initialStore } from "../store"  // Import the reducer and the initial state.
+import { createContext, useContext, useReducer } from "react";
 
-// Create a context to hold the global state of the application
-// We will call this global state the "store" to avoid confusion while using local states
-const StoreContext = createContext()
+const GlobalContext = createContext();
 
-// Define a provider component that encapsulates the store and warps it in a context provider to 
-// broadcast the information throught all the app pages and components.
-export function StoreProvider({ children }) {
-    // Initialize reducer with the initial state.
-    const [store, dispatch] = useReducer(storeReducer, initialStore())
-    // Provide the store and dispatch method to all child components.
-    return <StoreContext.Provider value={{ store, dispatch }}>
-        {children}
-    </StoreContext.Provider>
+const initialState = {
+  favorites: [],
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "ADD_FAVORITE": {
+      const fav = action.payload; // { uid, name, type }
+      if (state.favorites.find((f) => f.uid === fav.uid)) return state;
+      return { ...state, favorites: [...state.favorites, fav] };
+    }
+
+    case "REMOVE_FAVORITE": {
+      const uidToRemove = action.payload; // uid (string)
+      return {
+        ...state,
+        favorites: state.favorites.filter((f) => f.uid !== uidToRemove),
+      };
+    }
+
+    default:
+      return state;
+  }
 }
 
-// Custom hook to access the global state and dispatch function.
-export default function useGlobalReducer() {
-    const { dispatch, store } = useContext(StoreContext)
-    return { dispatch, store };
-}
+export const GlobalProvider = ({ children }) => {
+  const [store, dispatch] = useReducer(reducer, initialState);
+
+  // Helpers/acciones para usar desde los componentes (evitan repetir shape)
+  const actions = {
+    addFavorite: (fav) => dispatch({ type: "ADD_FAVORITE", payload: fav }),
+    removeFavorite: (uid) => dispatch({ type: "REMOVE_FAVORITE", payload: uid }),
+  };
+
+  return (
+    <GlobalContext.Provider value={{ store, dispatch, actions }}>
+      {children}
+    </GlobalContext.Provider>
+  );
+};
+
+export const useGlobalContext = () => useContext(GlobalContext);
+export default GlobalProvider;
