@@ -4,6 +4,8 @@ import { useGlobalContext } from "../hooks/useGlobalReducer";
 const CardItem = ({ type, item }) => {
   const { store, actions } = useGlobalContext();
 
+  const imgURL = `https://starwars-visualguide.com/assets/img/${type}/${item.uid}.jpg`;  
+
   const routeMap = { characters: "people", people: "people", planets: "planets", vehicles: "vehicles" };
   const imageMap = { characters: "characters", people: "characters", planets: "planets", vehicles: "vehicles" };
 
